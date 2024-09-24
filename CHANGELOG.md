@@ -1,5 +1,9 @@
 ## 2024-09-24
 
+- Added MIT License, as well as updating author in the package.json
+
+## 2024-09-24
+
 - Updated README.md for further usage and removal instructions.
 
 ## 2024-09-24
