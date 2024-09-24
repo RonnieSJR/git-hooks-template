@@ -1,3 +1,6 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-0.0.5-blue.svg)](https://github.com/RonnieSJR/git-hooks-template)
+
 # Git Hooks Template
 
 This repository contains useful Git hooks for automating changelog updates and version increments.
@@ -71,3 +74,7 @@ Please use this hook responsibly and understand its implications:
 - Always review the changes made by the hook to ensure they align with your project's needs.
 
 If you're working in a team, make sure all team members are aware of and agree to use this hook.
+
+## License
+
+MIT License

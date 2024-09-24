@@ -1,5 +1,9 @@
 ## 2024-09-24
 
+- Update README.md with MIT and Version badge.
+
+## 2024-09-24
+
 - Add keywords array and remove main and scripts fields in package.json.
 
 ## 2024-09-24
