@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# File: .git/hooks/post-commit
+
+set -e  # Exit immediately if a command exits with a non-zero status.
+
+LOG_FILE="/tmp/post-commit.log"
+
+# Function to log messages
+log_message() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+}
+
+log_message "Post-commit hook started"
+
+# Check if this commit is amending the previous commit
+if git log -1 | grep -q 'Automatic update of CHANGELOG.md and package.json version'; then
+    log_message "This commit is updating the CHANGELOG.md and package.json. Skipping further updates."
+    exit 0
+fi
+
+# Get the latest commit message
+COMMIT_MSG=$(git log -1 HEAD --pretty=format:%s)
+log_message "Commit message: $COMMIT_MSG"
+
+# Get the current date
+DATE=$(date +"%Y-%m-%d")
+
+# Update CHANGELOG.md
+echo -e "## $DATE\n\n- $COMMIT_MSG\n\n$(cat CHANGELOG.md)" > CHANGELOG.md.tmp
+mv CHANGELOG.md.tmp CHANGELOG.md
+log_message "CHANGELOG.md updated"
+
+# Increment version in package.json
+if [ -f package.json ]; then
+    log_message "package.json found, attempting to update version"
+    OLD_VERSION=$(node -p "require('./package.json').version")
+    log_message "Current version: $OLD_VERSION"
+    
+    VERSION=$(node -e "
+        const fs = require('fs');
+        const path = require('path');
+        const packagePath = path.resolve('./package.json');
+        console.error('Reading package.json from: ' + packagePath);
+        let package;
+        try {
+            package = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+        } catch (err) {
+            console.error('Error reading package.json:', err);
+            process.exit(1);
+        }
+        const [major, minor, patch] = package.version.split('.');
+        package.version = \`\${major}.\${minor}.\${parseInt(patch) + 1}\`;
+        try {
+            fs.writeFileSync(packagePath, JSON.stringify(package, null, 2));
+            console.log(package.version);
+        } catch (err) {
+            console.error('Error writing package.json:', err);
+            process.exit(1);
+        }
+    ")
+    
+    if [ $? -ne 0 ]; then
+        log_message "Error updating package.json version"
+        exit 1
+    fi
+    
+    log_message "Version updated from $OLD_VERSION to $VERSION"
+else
+    log_message "package.json not found"
+    VERSION="N/A"
+fi
+
+# Stage the updated files
+git add CHANGELOG.md
+[ -f package.json ] && git add package.json
+log_message "Files staged"
+
+# Amend the commit to include the updated files
+git commit --amend -m "$COMMIT_MSG
+
+Automatic update of CHANGELOG.md and package.json version to $VERSION" --no-verify
+log_message "Commit amended"
+
+# Print a message
+echo "Changelog updated and version incremented to $VERSION successfully!"
+log_message "Post-commit hook completed"

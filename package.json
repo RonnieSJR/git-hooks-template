@@ -1,0 +1,12 @@
+{
+  "name": "git-hooks-template",
+  "version": "0.0.2",
+  "description": "This repository contains useful Git hooks for automating changelog updates and version increments.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
