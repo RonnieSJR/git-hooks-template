@@ -1,5 +1,9 @@
 ## 2024-09-24
 
+- Add keywords array and remove main and scripts fields in package.json.
+
+## 2024-09-24
+
 - Added MIT License, as well as updating author in the package.json
 
 ## 2024-09-24
