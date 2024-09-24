@@ -1,6 +1,6 @@
 {
   "name": "git-hooks-template",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This repository contains useful Git hooks for automating changelog updates and version increments.",
   "main": "index.js",
   "scripts": {
